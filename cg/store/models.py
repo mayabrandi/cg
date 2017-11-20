@@ -402,3 +402,13 @@ class Panel(Model):
 
     def __str__(self):
         return f"{self.abbrev} ({self.current_version})"
+
+
+class SampleStats(Model):
+
+    id = Column(types.Integer, primary_key=True)
+    created_at = Column(types.DateTime, default=dt.datetime.now)
+    updated_at = Column(types.DateTime, onupdate=dt.datetime.now)
+    sample_id = Column(ForeignKey(Sample.id), nullable=False)
+
+    sample = orm.relationship(Sample, backref='stats', uselist=False)
