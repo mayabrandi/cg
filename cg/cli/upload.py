@@ -11,6 +11,7 @@ from cg.meta.upload.coverage import UploadCoverageApi
 from cg.meta.upload.gt import UploadGenotypesAPI
 from cg.meta.upload.observations import UploadObservationsAPI
 from cg.meta.upload.scoutapi import UploadScoutAPI
+from cg.meta.upload.stats import UploadStatsAPI
 
 LOG = logging.getLogger(__name__)
 
@@ -103,6 +104,23 @@ def scout(context, re_upload, print_console, family_id):
         print(results)
     else:
         scout_api.upload(results, force=re_upload)
+
+
+@upload.command()
+@click.argument('family_id')
+@click.pass_context
+def status(context: click.Context, family_id: str):
+    """Upload stats for all samples in an analysis."""
+    family_obj = context.obj['status'].family(family_id)
+    analysis_obj = family_obj.analyses[0]
+    api = UploadStatsAPI(
+        status=context.obj['status'],
+        trailblazer=tb.TrailblazerAPI(context.obj),
+        housekeeper=context.obj['housekeeper_api'],
+    )
+    for new_stats in api.save_stats(analysis_obj):
+        LOG.info(f"{new_stats.sample.internal_id}: upload stats")
+        context.obj['status'].add_commit(new_stats)
 
 
 @upload.command()

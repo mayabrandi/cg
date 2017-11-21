@@ -164,3 +164,7 @@ class FindHandler:
         """Fetch all deliveries."""
         query = self.Delivery.query
         return query
+
+    def samplestat(self, sample: models.Sample):
+        """Fetch stats for a sample."""
+        return self.SampleStats.filter(models.SampleStats.sample == sample).first()

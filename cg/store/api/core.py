@@ -26,6 +26,7 @@ class BaseHandler:
     Panel = models.Panel
     Pool = models.Pool
     Delivery = models.Delivery
+    SampleStats = models.SampleStats
 
 
 class CoreHandler(BaseHandler, AddHandler, FindHandler, StatusHandler, TrendsHandler):
